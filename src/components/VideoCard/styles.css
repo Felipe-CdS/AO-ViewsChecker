@@ -1,0 +1,24 @@
+.card {
+    margin-bottom: 1rem;
+    width: 40rem;
+    border: 3px solid #F45990;
+    overflow: hidden;
+}
+
+#img-col {
+    margin-right: 1rem;
+}
+
+.card-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 2rem !important;
+    font-family: 'Roboto Slab', serif;   
+}
+
+.card-text {
+    font-size: 1.5rem !important; 
+    font-family: 'Roboto Slab', serif;
+    margin-bottom: 0rem !important;
+}

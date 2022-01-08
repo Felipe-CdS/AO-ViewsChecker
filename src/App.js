@@ -1,25 +1,40 @@
-import logo from './logo.svg';
+import React from 'react';
+
+import { data_array } from './VideosData';
+
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import VideoCard from './components/VideoCard';
+
+class App extends React.Component {
+
+  state = {
+    VideoCardList: []
+  }
+
+  componentDidMount(){
+    var holder = [];
+
+    for(let i = 0; i < data_array.length; i++){
+      holder.push(<VideoCard key={data_array[i]} title_id={data_array[i]}/>);
+    }
+
+    this.setState({VideoCardList: holder});
+  }
+
+  render(){
+    return (
+      <div className="App">
+        <div id="header">
+          <img src="./assets/logo-white.png" alt=""></img>
+          <h1> Proximas Metas! </h1>
+        </div>
+        <div id="main-part">
+          {this.state.VideoCardList}        
+        </div>          
+      </div>
+    );
+  }  
 }
 
 export default App;
