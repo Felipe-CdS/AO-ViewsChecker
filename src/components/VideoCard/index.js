@@ -1,6 +1,7 @@
 import React from 'react';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
+import ProgressBar from 'react-bootstrap/ProgressBar';
 import Col from 'react-bootstrap/Col';
 import axios from 'axios';
 
@@ -13,12 +14,17 @@ class VideoCard extends React.Component {
 
     this.state = {
       id: props.title_id,
-      title: "",
-      views: "",
+      title: "TWICE \"YES or YES\" M/V",
+      views: "300058",
       next_goal: 0,
-      thumb_src: ""
+      percentage: 0,
+      thumb_src: "https://i.ytimg.com/vi/mAKsZ26SabQ/sddefault.jpg"
     };   
-  }  
+  } 
+
+  componentDidMount(){
+    this.requestAPI();
+  }
 
   async requestAPI(){
     var apiString = "https://youtube.googleapis.com/youtube/v3/videos?part=snippet&part=statistics";
@@ -30,35 +36,34 @@ class VideoCard extends React.Component {
     this.setState({title: response.items[0].snippet.title});
     this.setState({views: response.items[0].statistics.viewCount});
     this.setState({thumb_src: response.items[0].snippet.thumbnails.standard.url});
-    this.defineNextGoal();
-  }
+    this.defineNextGoalAndPercentage();
+  }  
 
-  componentDidMount(){
-    this.requestAPI();
-  }
+  defineNextGoalAndPercentage(){
+    let multiplier, percentage_calc, number_size = 0;    
+    var goal = parseInt(this.state.views);    
 
-  defineNextGoal(){
-    var goal_holder = parseInt(this.state.views);
+    while(parseInt(goal) > 0){
+      number_size++;
+      goal = goal / 10;
+    }
 
-    if(goal_holder <= 10**7){
-      goal_holder = (Math.ceil(goal_holder/10**6)) * 10**6;
-    }
-    else if(goal_holder <= 10**8){
-      goal_holder = (Math.ceil(goal_holder/10**7)) * 10**7;
-    }
-    else if(goal_holder <= 10**9){
-      goal_holder = (Math.ceil(goal_holder/10**8)) * 10**8;
-    }
-    else if(goal_holder <= 10**10){
-      goal_holder = (Math.ceil(goal_holder/10**9)) * 10**9;
-    }
-    this.setState({next_goal: goal_holder});
+    multiplier = 10**(number_size - 1);
+    goal = parseInt(this.state.views);
+    goal = (Math.ceil(goal/multiplier)) * multiplier;    
+
+    percentage_calc = (this.state.views * 100) / goal;
+
+    this.setState({next_goal: goal});
+    this.setState({percentage: percentage_calc});
+    //Returns to the Parent te percentages so it can sort the array;
+    this.props.onChange([this.state.id, percentage_calc]);
   }
 
   render(){
     return (
       <div>
-       <Card style={{ width: '40rem', height: '10rem', border: '3px solid #F45990'}}>        
+       <Card style={{ width: '40rem', height: '10rem'}}>        
           <Card.Body>
           <Row>
             <Col md="3" id="img-col">
@@ -67,7 +72,8 @@ class VideoCard extends React.Component {
             <Col md="8">
               <Card.Title>{this.state.title}</Card.Title>
               <Card.Text>Views: {new Intl.NumberFormat().format(this.state.views)}</Card.Text>
-              <Card.Text>Próxima meta: {new Intl.NumberFormat().format(this.state.next_goal)}</Card.Text>
+              <Card.Text>Próxima meta: {new Intl.NumberFormat().format(this.state.next_goal)} ({this.state.percentage.toFixed(2)}%)</Card.Text>
+              <ProgressBar animated striped now={this.state.percentage.toFixed(2)} />
             </Col>
           </Row>          
           </Card.Body>
