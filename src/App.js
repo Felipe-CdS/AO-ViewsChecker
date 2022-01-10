@@ -17,8 +17,8 @@ class App extends React.Component {
 
     for(let i = 0; i < data_array.length; i++){
       let a = [3];
-      a[0] = data_array[i];      
-      a[1] = <VideoCard key={data_array[i]} title_id={data_array[i]} onChange={this.eventhandler}/>;
+      a[0] = data_array[i].id;      
+      a[1] = <VideoCard key={data_array[i].id} id={data_array[i].id} title={data_array[i].title} onChange={this.eventhandler}/>;
       a[2] = -1; //Percentage
       holder.push(a);
     }

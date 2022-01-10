@@ -13,33 +13,30 @@ class VideoCard extends React.Component {
     super(props);
 
     this.state = {
-      id: props.title_id,
-      title: "TWICE \"YES or YES\" M/V",
-      views: "300058",
+      id: props.id,
+      title: props.title,
+      views: "",
       next_goal: 0,
       percentage: 0,
-      thumb_src: "https://i.ytimg.com/vi/mAKsZ26SabQ/sddefault.jpg"
+      thumb_src: `https://i.ytimg.com/vi/${props.id}/sddefault.jpg`
     };   
   } 
 
   componentDidMount(){
-    this.requestAPI();
+    this.requestAPI().then(this.defineNextGoalAndPercentage);
   }
 
   async requestAPI(){
-    var apiString = "https://youtube.googleapis.com/youtube/v3/videos?part=snippet&part=statistics";
+    var apiString = "https://youtube.googleapis.com/youtube/v3/videos?part=statistics";
     var params = {
       key: process.env.REACT_APP_API_KEY,
       id: this.state.id
     };
-    var response = await axios.get(apiString, {params}).then((resp) => resp.data);
-    this.setState({title: response.items[0].snippet.title});
+    var response = await axios.get(apiString, {params}).then((resp) => resp.data);  
     this.setState({views: response.items[0].statistics.viewCount});
-    this.setState({thumb_src: response.items[0].snippet.thumbnails.standard.url});
-    this.defineNextGoalAndPercentage();
   }  
 
-  defineNextGoalAndPercentage(){
+  defineNextGoalAndPercentage = () => {
     let multiplier, percentage_calc, number_size = 0;    
     var goal = parseInt(this.state.views);    
 
