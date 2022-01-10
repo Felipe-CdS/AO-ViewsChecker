@@ -20,12 +20,14 @@
 #header img {
   width: 8rem;
   margin-right: 3rem;
+  filter: drop-shadow(3px 3px 0px #F45990);
 }
 
 #header h1 {
   color: white;
   font-size: 4rem;
   font-family: 'Roboto Slab', serif;
+  text-shadow: 3px 3px 0px #F45990 !important;
 }
 
 #main-part{

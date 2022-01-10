@@ -15,7 +15,7 @@ class VideoCard extends React.Component {
     this.state = {
       id: props.id,
       title: props.title,
-      views: "",
+      views: 0,
       next_goal: 0,
       percentage: 0,
       thumb_src: `https://i.ytimg.com/vi/${props.id}/sddefault.jpg`
@@ -23,11 +23,11 @@ class VideoCard extends React.Component {
   } 
 
   componentDidMount(){
-    this.requestAPI().then(this.defineNextGoalAndPercentage);
+    this.yt_requestAPI().then(this.defineNextGoalAndPercentage);
   }
 
-  async requestAPI(){
-    var apiString = "https://youtube.googleapis.com/youtube/v3/videos?part=statistics";
+  yt_requestAPI = async() => {
+   var apiString = "https://youtube.googleapis.com/youtube/v3/videos?part=statistics";
     var params = {
       key: process.env.REACT_APP_API_KEY,
       id: this.state.id
@@ -36,18 +36,53 @@ class VideoCard extends React.Component {
     this.setState({views: response.items[0].statistics.viewCount});
   }  
 
+  //Spotify doesn't give the views counter. So this is implemented but not used
+  /*spotify_requestAPI = async() => {
+    var auth_api_URL = 'https://accounts.spotify.com/api/token';
+    var request_URL ='https://api.spotify.com/v1/tracks/308Ir17KlNdlrbVLHWhlLe';
+    var client_id = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
+    var client_secret = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
+
+    var headers = {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      auth: {
+        username: client_id,
+        password: client_secret,
+      },
+    };
+
+    var data = { grant_type: 'client_credentials' };
+
+    var auth_token = await axios.post(auth_api_URL, qs.stringify(data), headers);  
+
+    var response = await axios.get(request_URL, { 
+      headers: {'Authorization': `Bearer ${auth_token.data.access_token}` }
+    });
+    console.log(response.data);
+  } */
+
   defineNextGoalAndPercentage = () => {
     let multiplier, percentage_calc, number_size = 0;    
     var goal = parseInt(this.state.views);    
 
-    while(parseInt(goal) > 0){
-      number_size++;
-      goal = goal / 10;
+    if(goal < 5 * 10**6){
+      goal = 5 * 10**6;  
     }
-
-    multiplier = 10**(number_size - 1);
-    goal = parseInt(this.state.views);
-    goal = (Math.ceil(goal/multiplier)) * multiplier;    
+    else if(goal < 10**7){
+      goal = 10**7; 
+    }
+    else{
+      while(parseInt(goal) > 0){
+        number_size++;
+        goal = goal / 10;
+      }  
+      multiplier = 10**(number_size - 1);
+      goal = parseInt(this.state.views);
+      goal = (Math.ceil(goal/multiplier)) * multiplier; 
+    }      
 
     percentage_calc = (this.state.views * 100) / goal;
 
@@ -66,8 +101,16 @@ class VideoCard extends React.Component {
             <Col md="3" id="img-col">
               <Card.Img src={this.state.thumb_src}  style={{ width: '10rem'}}/>
             </Col>
-            <Col md="8">
-              <Card.Title>{this.state.title}</Card.Title>
+            <Col md="9">
+              <Card.Title>
+                <div className="card-title-div">{this.state.title}</div>
+                <button onClick={() => navigator.clipboard.writeText(`https://youtu.be/${this.state.id}`)}>
+                  <img alt="" src="./assets/link.png"></img>
+                </button>
+                <a href={`https://youtu.be/${this.state.id}`}>
+                  <img alt="" src="./assets/youtube.png"></img>
+                </a>
+                </Card.Title>
               <Card.Text>Views: {new Intl.NumberFormat().format(this.state.views)}</Card.Text>
               <Card.Text>Próxima meta: {new Intl.NumberFormat().format(this.state.next_goal)} ({this.state.percentage.toFixed(2)}%)</Card.Text>
               <ProgressBar animated striped now={this.state.percentage.toFixed(2)} />

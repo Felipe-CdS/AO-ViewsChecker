@@ -2,24 +2,64 @@
     margin-bottom: 1rem;
     border: 3px solid #F45990 !important;
     overflow: hidden;
+    padding: 0 !important;
 }
 
 #img-col {
-    margin-right: 1rem;
+    margin-right: 0rem;
 }
 
 .card-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-title .card-title-div{
+    width: 100%;
+    text-align: center;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     font-size: 1.5rem !important;
     font-family: 'Roboto Slab', serif;   
+    margin-right: 1.2rem;
+    position: relative;
+    left: 1rem;
+}
+
+.card-title button, a{
+    display: flex;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: transparent;
+    border: none;
+}
+
+.card-title button{
+    margin-right: 0.5rem;
+}
+
+.card-title button img, a img{
+    width: 1.3rem;
+    height: 1.3rem;
+    position: relative;
+    opacity: 0.5;
+}
+.card-title button img:hover, a img:hover{  
+    opacity: 1;
 }
 
 .card-text {
     font-size: 1.2rem !important; 
     font-family: 'Roboto Slab', serif;
     margin-bottom: 0rem !important;
+}
+
+.progress{
+    width: calc(100% - 1rem); 
+    position: relative; 
+    left: 1rem;
 }
 
 .progress-bar {
