@@ -1,19 +1,21 @@
 import React from 'react';
+import VideoCard from './components/VideoCard';
+import { Spinner } from 'react-bootstrap';
 
 import { yt_requestAPI, data_array } from './VideosData';
 
 import './App.css';
 
-import VideoCard from './components/VideoCard';
-
 class App extends React.Component {
 
   state = {
+    loading: true,
     VideoCardList: []
   }
 
   componentDidMount(){
-    yt_requestAPI().then(() => {
+    yt_requestAPI()
+    .then(() => {
       let holder = [];
 
       for(let i = 0; i < data_array.length; i++){
@@ -26,13 +28,25 @@ class App extends React.Component {
                       percentage={data_array[i].percentage}
                     />);
       }
-      this.setState({VideoCardList: holder});
+      this.setState({VideoCardList: holder});      
+    })
+    .then(() => {
+      this.setState({loading: false});
     });
   }
 
   render(){
-    let holder = [...this.state.VideoCardList];
-    holder.sort((a, b) => b.props.percentage - a.props.percentage);
+    let holder;
+
+    if(this.state.loading){
+      holder = (<Spinner animation="border" variant="light">
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>);
+    }
+    else{
+      holder = [...this.state.VideoCardList];
+      holder.sort((a, b) => b.props.percentage - a.props.percentage);
+    }   
 
     return (
       <div className="App">
@@ -41,7 +55,7 @@ class App extends React.Component {
           <h1> Proximas Metas! </h1>
         </div>
         <div id="main-part">
-          {holder}        
+         {holder}
         </div>          
       </div>
     );

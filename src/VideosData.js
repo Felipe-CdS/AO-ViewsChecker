@@ -8,7 +8,6 @@ import axios from "axios";
 
 // Move these functions to other file after
 export var yt_requestAPI = async() => {
-    console.log("API requests...");
     var apiString = "https://youtube.googleapis.com/youtube/v3/videos?part=statistics";
 
     for(let i = 0; i < data_array.length; i++){
@@ -23,7 +22,7 @@ export var yt_requestAPI = async() => {
 
         //Testing
         //data_array[i].views = Math.floor(Math.random() * 10**9) + 10**3;
-
+        
         data_array[i].next_goal = next_goal(data_array[i].views);
         data_array[i].percentage = next_goal_percentage(data_array[i].views, data_array[i].next_goal);
     }
