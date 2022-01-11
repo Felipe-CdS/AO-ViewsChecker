@@ -4,6 +4,57 @@
 /*                                50 MV's                                     */
 /*                                                                            */
 /******************************************************************************/
+import axios from "axios";
+
+// Move these functions to other file after
+export var yt_requestAPI = async() => {
+    console.log("API requests...");
+    var apiString = "https://youtube.googleapis.com/youtube/v3/videos?part=statistics";
+
+    for(let i = 0; i < data_array.length; i++){
+        var params = {
+            key: process.env.REACT_APP_API_KEY,
+            id: data_array[i].id
+        };
+
+        //Real request
+        var response = await axios.get(apiString, {params}).then((resp) => resp.data);
+        data_array[i].views = response.items[0].statistics.viewCount;
+
+        //Testing
+        //data_array[i].views = Math.floor(Math.random() * 10**9) + 10**3;
+
+        data_array[i].next_goal = next_goal(data_array[i].views);
+        data_array[i].percentage = next_goal_percentage(data_array[i].views, data_array[i].next_goal);
+    }
+}  
+
+function next_goal(views){
+    let multiplier, number_size = 0;    
+    var goal = parseInt(views);    
+
+    if(goal < 5 * 10**6){
+      goal = 5 * 10**6;  
+    }
+    else if(goal < 10**7){
+      goal = 10**7; 
+    }
+    else{
+      while(parseInt(goal) > 0){
+        number_size++;
+        goal = goal / 10;
+      }  
+      multiplier = 10**(number_size - 1);
+      goal = parseInt(views);
+      goal = (Math.ceil(goal/multiplier)) * multiplier; 
+    } 
+    return (goal);
+}
+
+function next_goal_percentage(views, goal){
+    let percentage_calc = (views * 100) / goal;
+    return (percentage_calc);
+}
 
 export const data_array = 
 [

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { data_array } from './VideosData';
+import { yt_requestAPI, data_array } from './VideosData';
 
 import './App.css';
 
@@ -13,45 +13,26 @@ class App extends React.Component {
   }
 
   componentDidMount(){
-    var holder = [];
+    yt_requestAPI().then(() => {
+      let holder = [];
 
-    for(let i = 0; i < data_array.length; i++){
-      let a = [3];
-      a[0] = data_array[i].id;      
-      a[1] = <VideoCard key={data_array[i].id} id={data_array[i].id} title={data_array[i].title} onChange={this.eventhandler}/>;
-      a[2] = -1; //Percentage
-      holder.push(a);
-    }
-    this.setState({VideoCardList: holder});
+      for(let i = 0; i < data_array.length; i++){
+        holder.push(<VideoCard 
+                      key={data_array[i].id} 
+                      id={data_array[i].id} 
+                      title={data_array[i].title} 
+                      views={data_array[i].views}
+                      next_goal={data_array[i].next_goal}
+                      percentage={data_array[i].percentage}
+                    />);
+      }
+      this.setState({VideoCardList: holder});
+    });
   }
 
-  eventhandler = (data) => {
-    let state_list = this.state.VideoCardList;
-    let searched_id = data[0];
-    let percentage = data[1];  
-    let all_percentage_calculated = true;
-
-    for (let i = 0; i < state_list.length; i++) {
-      if(searched_id === state_list[i][0]){        
-        state_list[i][2] = percentage;
-      }  
-      if(state_list[i][2] !== -1)      
-        all_percentage_calculated = false;    
-    } 
-
-    if(!all_percentage_calculated){
-      state_list = state_list.sort((a, b) => b[2] - a[2]);
-    }    
-
-    this.setState({VideoCardList: state_list});
-  };
-
   render(){
-    let holder = [];
-
-    for (let i = 0; i < (this.state.VideoCardList).length; i++) {
-      holder.push(this.state.VideoCardList[i][1]);
-    } 
+    let holder = [...this.state.VideoCardList];
+    holder.sort((a, b) => b.props.percentage - a.props.percentage);
 
     return (
       <div className="App">
