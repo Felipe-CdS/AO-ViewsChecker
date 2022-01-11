@@ -12,7 +12,7 @@ class VideoCard extends React.Component {
     super(props);
 
     this.state = {
-      id: props.id ,
+      id: props.id,
       title: props.title,
       views: props.views || 0,
       next_goal: props.next_goal || 0,
@@ -21,10 +21,18 @@ class VideoCard extends React.Component {
     };   
   }
 
+  linkButtonClickEvent = () =>{
+    navigator.clipboard.writeText(`https://youtu.be/${this.state.id}`);
+    document.getElementById(`link-button-tooltip-${this.state.id}`).classList.toggle("clicked");
+    setTimeout(() => {
+      document.getElementById(`link-button-tooltip-${this.state.id}`).classList.toggle("clicked");
+    }, 1000);
+  }
+
   render(){
     return (
       <div>
-       <Card style={{ width: '40rem', height: '10rem'}}>        
+       <Card style={{ width: '40rem', height: '10rem'}}>
           <Card.Body>
           <Row>
             <Col md="3" id="img-col">
@@ -33,9 +41,10 @@ class VideoCard extends React.Component {
             <Col md="9">
               <Card.Title>
                 <div className="card-title-div">{this.state.title}</div>
-                <button onClick={() => navigator.clipboard.writeText(`https://youtu.be/${this.state.id}`)}>
-                  <img alt="" src="./assets/link.png"></img>
-                </button>
+                <button onClick={this.linkButtonClickEvent}>
+                    <img alt="" src="./assets/link.png"></img>
+                    <span className="link-button-tooltip" id={`link-button-tooltip-${this.state.id}`}>Copied!</span>
+                </button>                
                 <a href={`https://youtu.be/${this.state.id}`}>
                   <img alt="" src="./assets/youtube.png"></img>
                 </a>

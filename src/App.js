@@ -26,9 +26,9 @@ class App extends React.Component {
                       views={data_array[i].views}
                       next_goal={data_array[i].next_goal}
                       percentage={data_array[i].percentage}
-                    />);
+                    />)
       }
-      this.setState({VideoCardList: holder});      
+      this.setState({VideoCardList: holder}); 
     })
     .then(() => {
       this.setState({loading: false});
@@ -39,9 +39,13 @@ class App extends React.Component {
     let holder;
 
     if(this.state.loading){
-      holder = (<Spinner animation="border" variant="light">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>);
+      holder = (
+        <div> 
+          <Spinner animation="border" variant="light">
+                    <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>      
+      );
     }
     else{
       holder = [...this.state.VideoCardList];
