@@ -19,21 +19,22 @@ export var yt_requestAPI = async() => {
 
         //Real request
         var response = await axios.get(apiString, {params}).then((resp) => resp.data);
-        data_array[i].views = response.items[0].statistics.viewCount;
+        response = response.items[0].statistics.viewCount;        
 
         //Testing
         //Instant Test
-        //data_array[i].views = (Math.floor(Math.random() * 10**9) + 10**3);
+        //var response = (Math.floor(Math.random() * 10**9) + 10**3);
         //Delayed Test to simulate API Calls
-        //data_array[i].views = await mockTests();
+        //var response = await mockTests();
 
+        data_array[i].views = response;
         data_array[i].next_goal = next_goal(data_array[i].views);
         data_array[i].percentage = next_goal_percentage(data_array[i].views, data_array[i].next_goal);
     }
 } 
 
 export const mockTests = async () => {
-  return new Promise(resolve => setTimeout(() => { resolve(Math.floor(Math.random() * 10**9) + 10**3) }, 50));
+  return new Promise(resolve => setTimeout(() => { resolve(Math.floor(Math.random() * 10**9) + 10**3) }, 20));
 }
 
 function next_goal(views){

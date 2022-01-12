@@ -5,6 +5,7 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import Col from 'react-bootstrap/Col';
 
 import './styles.css';
+import './mobile_styles.css';
 
 class VideoCard extends React.Component {   
 
@@ -31,14 +32,14 @@ class VideoCard extends React.Component {
 
   render(){
     return (
-      <div>
-       <Card style={{ width: '40rem', height: '10rem'}}>
-          <Card.Body>
+       <Card>
+
+          <Card.Body className="default-size-card">
           <Row>
-            <Col md="3" id="img-col">
-              <Card.Img src={this.state.thumb_src}  style={{ width: '10rem'}}/>
+            <Col xs="3" id="img-col">
+              <Card.Img src={this.state.thumb_src}/>
             </Col>
-            <Col md="9">
+            <Col xs="9">
               <Card.Title>
                 <div className="card-title-div">{this.state.title}</div>
                 <button onClick={this.linkButtonClickEvent}>
@@ -55,8 +56,35 @@ class VideoCard extends React.Component {
             </Col>
           </Row>          
           </Card.Body>
+
+          <Card.Body className="mobile-size-card">
+          <Row>
+            <Card.Title>
+                  <div className="card-title-div">{this.state.title}</div>
+                  <button onClick={this.linkButtonClickEvent}>
+                      <img alt="" src="./assets/link.png"></img>
+                      <span className="link-button-tooltip" id={`link-button-tooltip-${this.state.id}`}>Copied!</span>
+                  </button>                
+                  <a href={`https://youtu.be/${this.state.id}`}>
+                    <img alt="" src="./assets/youtube.png"></img>
+                  </a>
+            </Card.Title>
+          </Row>
+          <Row>
+            <Col xs="5" id="img-col">
+              <Card.Img src={this.state.thumb_src}/>
+            </Col>
+            <Col xs="7">              
+              <Card.Text>Views: {new Intl.NumberFormat().format(this.state.views)}</Card.Text>
+              <Card.Text>Próxima meta: {new Intl.NumberFormat().format(this.state.next_goal)}</Card.Text>
+              <Card.Text>({this.state.percentage.toFixed(2)}%)</Card.Text>              
+            </Col>
+          </Row>         
+          <Row>
+            <ProgressBar animated striped now={this.state.percentage.toFixed(2)}/>
+          </Row> 
+          </Card.Body>
         </Card>
-      </div>
     );  
   }
 }

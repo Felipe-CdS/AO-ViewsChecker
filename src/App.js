@@ -1,6 +1,8 @@
 import React from 'react';
+import { Row, Col, Spinner } from 'react-bootstrap';
+
 import VideoCard from './components/VideoCard';
-import { Spinner } from 'react-bootstrap';
+import StreamPartyMenu from './components/StreamPartyMenu';
 
 import { yt_requestAPI, data_array } from './VideosData';
 
@@ -54,10 +56,17 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        <div id="header">
-          <img src="./assets/logo-white.png" alt=""></img>
-          <h1> Proximas Metas! </h1>
-        </div>
+        <Row id="header">
+          <Col xs="3" className="col">
+            <img src="./assets/logo-white.png" alt=""></img>
+          </Col>
+          <Col xs="6" className="col">
+            <h1> Proximas Metas! </h1>
+          </Col>
+          <Col xs="3" className="col">
+            <StreamPartyMenu name="Stream Party!"/>
+          </Col>          
+        </Row>
         <div id="main-part">
          {holder}
         </div>          
